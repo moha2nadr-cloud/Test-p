@@ -4,6 +4,9 @@ on:
   push:
     branches: [ main ]
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -21,7 +24,7 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.19.0'
+          channel: 'stable'
 
       - name: Create base Flutter project
         run: flutter create -t app base_project
@@ -35,12 +38,12 @@ jobs:
         working-directory: base_project
         run: flutter pub get
 
-      - name: Build APK
+      - name: Build APK (debug)
         working-directory: base_project
-        run: flutter build apk --release
+        run: flutter build apk --debug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: app-release
-          path: base_project/build/app/outputs/flutter-apk/app-release.apk
+          name: app-debug
+          path: base_project/build/app/outputs/flutter-apk/app-debug.apk
